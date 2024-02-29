@@ -1,4 +1,4 @@
-name: "Docker build and push with QEMU"
+name: "Build with QEMU"
 
 # Controls when the workflow will run
 on:
