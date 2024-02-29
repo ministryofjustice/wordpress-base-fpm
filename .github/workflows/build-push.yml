@@ -1,4 +1,4 @@
-name: "Docker build with QEMU"
+name: "Docker build and push with QEMU"
 
 # Controls when the workflow will run
 on:
@@ -77,7 +77,7 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm/v7
-            linux/arm64
+            linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.wordpress-base-meta.outputs.tags }}
           labels: ${{ steps.wordpress-base-meta.outputs.labels }}
