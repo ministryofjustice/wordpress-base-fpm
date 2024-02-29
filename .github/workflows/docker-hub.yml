@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: ['main']
   schedule:
-    - cron: '32 6 * * 7'
+    - cron: '32 6 * * 0'
       # Run builds on Sunday @ 06:32
 
 env:
