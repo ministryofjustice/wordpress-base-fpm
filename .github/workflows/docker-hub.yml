@@ -8,6 +8,9 @@ on:
       - 'v*.*.*'
   pull_request:
     branches: ['main']
+  schedule:
+    - cron: '32 6 * * 7'
+      # Run builds on Sunday @ 06:32
 
 env:
   TEST_TAG: ministryofjustice/wordpress-base-fpm:test
