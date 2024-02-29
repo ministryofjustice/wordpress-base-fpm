@@ -1,20 +1,13 @@
-# For more examples, including how to limit scans to only high-severity issues
-# and fail PR checks, see https://github.com/snyk/actions/
-
-name: Snyk Security
+name: Snyk Container Monitor
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
+    # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:
-    - cron: '17 5 * * 0'
-      # Run Snyk on Sundays @ 05:17
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    - cron: '38 7 * * 6'
 
 permissions:
   contents: read
@@ -22,33 +15,25 @@ permissions:
 jobs:
   snyk:
     permissions:
-      actions: read
-      contents: read
-      statuses: read
-      security-events: write
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Snyk CLI to check for security issues
-        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
-
-      - name: PHP test
-        uses: snyk/actions/php@master
+      - uses: actions/checkout@v3
+      - name: Build a Docker image
+        run: docker build -t justice/wordpress-base-fpm .
+      - name: Run Snyk to check Docker image for vulnerabilities
+        # Snyk can be used to break the build when it detects vulnerabilities.
+        # In this case we want to upload the issues to GitHub Code Scanning
         continue-on-error: true
-
-        # Build the docker images for testing
-      - name: Container monitor ~ PHP-FPM
-        run: |
-          docker image build -t wordpress-base-fpm:snyk .
-        # Runs Snyk Container (Container and SCA) analysis.
-      - name: Container monitor ~ analyse
-        run: |
-          snyk container monitor wordpress-base-fpm:snyk --file=Dockerfile
-
-        # Push the Snyk Code results into GitHub Code Scanning tab
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: snyk/actions/docker@14818c4695ecc4045f33c9cee9e795a788711ca4
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          sarif_file: snyk-code.sarif
+          image: justice/wordpress-base-fpm
+          args: --file=Dockerfile
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
