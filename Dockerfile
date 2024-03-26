@@ -11,8 +11,11 @@ RUN apk add --update bash \
     libgomp \
     imagemagick-dev \
     icu-dev \
-    mariadb-client \
-    $PHPIZE_DEPS
+    mariadb-client
+
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install excimer \
+    && docker-php-ext-enable excimer
 
 ARG IMAGICK_VERSION=3.7.0
 # Imagick is installed from the archive because regular installation fails
@@ -26,7 +29,7 @@ RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/re
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install exif gd zip mysqli opcache intl
 
-RUN apk del $PHPIZE_DEPS
+RUN apk del -f .build-deps $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
