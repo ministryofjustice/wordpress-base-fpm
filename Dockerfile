@@ -1,22 +1,35 @@
-FROM php:8.2-fpm-alpine
+# 26-03-2024
+# alpine-3.19 is vulnerable, using alipine3.18
+FROM php:8.3-fpm-alpine3.18
 
-RUN apk add --update bash  \
-    zlib-dev  \
-    libpng-dev  \
-    libzip-dev  \
+RUN apk add --update bash \
+    zlib-dev \
+    libpng-dev \
+    libzip-dev \
     libxml2-dev \
-    ghostscript imagemagick imagemagick-libs imagemagick-dev libjpeg-turbo libgomp freetype-dev \
-    icu-dev  \
-    htop  \
-    mariadb-client \
-    $PHPIZE_DEPS
+    libjpeg-turbo \
+    libgomp \
+    imagemagick-dev \
+    icu-dev \
+    mariadb-client
 
-RUN pecl install imagick
-RUN docker-php-ext-enable imagick && \
-    docker-php-ext-configure intl && \
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install excimer \
+    && docker-php-ext-enable excimer
+
+ARG IMAGICK_VERSION=3.7.0
+# Imagick is installed from the archive because regular installation fails
+# See: https://github.com/Imagick/imagick/issues/643#issuecomment-1834361716
+RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/refs/tags/${IMAGICK_VERSION}.tar.gz \
+    && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
+    && phpize && ./configure && make && make install \
+    && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/docker-php-ext-imagick.ini \
+    && rm -rf /tmp/*
+
+RUN docker-php-ext-configure intl && \
     docker-php-ext-install exif gd zip mysqli opcache intl
 
-RUN apk del $PHPIZE_DEPS
+RUN apk del -f .build-deps $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
