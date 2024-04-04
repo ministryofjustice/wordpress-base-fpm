@@ -17,6 +17,8 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && pecl install excimer \
     && docker-php-ext-enable excimer
 
+WORKDIR /tmp
+
 ARG IMAGICK_VERSION=3.7.0
 # Imagick is installed from the archive because regular installation fails
 # See: https://github.com/Imagick/imagick/issues/643#issuecomment-1834361716
@@ -25,6 +27,9 @@ RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/re
     && phpize && ./configure && make && make install \
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/docker-php-ext-imagick.ini \
     && rm -rf /tmp/*
+
+
+WORKDIR /var/www/html
 
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install exif gd zip mysqli opcache intl
