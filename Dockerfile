@@ -28,6 +28,7 @@ RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/re
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/docker-php-ext-imagick.ini \
     && rm -rf /tmp/*
 
+
 WORKDIR /var/www/html
 
 RUN docker-php-ext-configure intl && \
