@@ -9,6 +9,9 @@ RUN apk add --update bash \
     libxml2-dev \
     libjpeg-turbo \
     libgomp \
+    ghostscript \
+    imagemagick \
+    imagemagick-libs \
     imagemagick-dev \
     icu-dev \
     mariadb-client
