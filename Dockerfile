@@ -5,18 +5,25 @@ RUN apk add --update bash  \
     libpng-dev  \
     libzip-dev  \
     libxml2-dev \
-    ghostscript imagemagick imagemagick-libs imagemagick-dev libjpeg-turbo libgomp freetype-dev \
+    ghostscript \
+    imagemagick \
+    imagemagick-libs \
+    imagemagick-dev \
+    libjpeg-turbo \
+    libgomp \
+    freetype-dev \
     icu-dev  \
     htop  \
-    mariadb-client \
-    $PHPIZE_DEPS
+    mariadb-client
+
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS
 
 RUN pecl install imagick
 RUN docker-php-ext-enable imagick && \
     docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
 
-RUN apk del $PHPIZE_DEPS
+RUN apk del .build-deps $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
