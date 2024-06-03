@@ -56,10 +56,3 @@ RUN { \
         echo 'catch_workers_output = yes'; \
         echo 'decorate_workers_output = no'; \
     } > /usr/local/etc/php/conf.d/error-logging.ini
-
-# Set timezone
-ENV TZ=Europe/London
-RUN apk add dpkg tzdata && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN printf '[Date]\ndate.timezone="%s"\n' $TZ > /usr/local/etc/php/conf.d/tzone.ini    
