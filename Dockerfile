@@ -1,6 +1,4 @@
-# 26-03-2024
-# alpine-3.19 is vulnerable, using alipine3.18
-FROM php:8.3-fpm-alpine3.18
+FROM php:8.3-fpm-alpine3.20
 
 RUN apk add --update bash  \
     zlib-dev  \
