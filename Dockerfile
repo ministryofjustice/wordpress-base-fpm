@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.20
+FROM php:8.3-fpm-alpine3.19
 
 RUN apk add --update bash  \
     zlib-dev  \
