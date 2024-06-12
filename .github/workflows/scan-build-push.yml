@@ -1,4 +1,4 @@
-name: "Build with QEMU"
+name: "Scan, Build and Push to Docker Hub"
 
 # Controls when the workflow will run
 on:
