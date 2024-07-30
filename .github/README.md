@@ -18,7 +18,7 @@
 * [intranet.justice.gov.uk](https://intranet.justice.gov.uk/)
 
 ## Security first
-This repository uses Snyk to monitor vulnerabilities that occur in a built image. Snyk runs on an automated schedule ensuring we get the latest patched updates.
+This repository uses Snyk to monitor vulnerabilities that occur in a Docker image. Snyk runs on an automated schedule ensuring we get the latest patched updates regularly.
 
 To modify the schedule you can edit the GitHub Action located in `.github/workflows`.
 
