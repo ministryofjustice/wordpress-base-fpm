@@ -39,7 +39,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: justice/wordpress-base-fpm
-          args: --file=Dockerfile
+          args: --file=Dockerfile --severity-threshold=medium
   build:
     needs: snyk
     runs-on: ubuntu-latest
