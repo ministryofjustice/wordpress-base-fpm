@@ -7,7 +7,7 @@
 
 <hr>
 
-#### An Alpine based PHP-FPM process container used in Justice Digital / Central Digital Product Team (CDPT) for WordPress applications hosted on Cloud Platform
+#### An optimised Alpine-based PHP-FPM process container used in Justice Digital / Central Digital Product Team (CDPT) for WordPress applications hosted on Cloud Platform
 
 </div>
 
@@ -16,6 +16,11 @@
 **Used by:**
 * [www.justice.gov.uk](https://www.justice.gov.uk/)
 * [intranet.justice.gov.uk](https://intranet.justice.gov.uk/)
+
+## Security first
+This repository uses Snyk to monitor vulnerabilities that occur in a Docker image. Snyk runs on an automated schedule ensuring we get the latest patched updates regularly.
+
+To modify the schedule you can edit the GitHub Action located in `.github/workflows`.
 
 
 
