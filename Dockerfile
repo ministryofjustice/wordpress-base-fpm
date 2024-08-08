@@ -11,6 +11,8 @@ RUN apk add --update bash  \
     imagemagick-dev \
     libjpeg-turbo \
     libgomp \
+    libtool \
+    automake \
     freetype-dev \
     icu-dev  \
     htop  \
@@ -31,9 +33,27 @@ RUN curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.7.0.tgz'; \
     sed -i -e 's!^//#endif$!#endif!' /tmp/imagick-3.7.0/Imagick.stub.php; \
     grep '^//#endif$' /tmp/imagick-3.7.0/Imagick.stub.php && exit 1 || :; \
     docker-php-ext-install /tmp/imagick-3.7.0; \
-    rm -rf imagick.tgz /tmp/imagick-3.7.0;
+    rm -rf imagick.tgz /tmp/imagick-3.7.0
 
-RUN apk del .build-deps $PHPIZE_DEPS
+# https://docs.ewww.io/article/6-the-plugin-says-i-m-missing-something
+ARG GIF=1.95
+ARG JPG='9f'
+ARG PNG=0.7.8
+ARG WEBP=1.4.0
+
+RUN curl -fL -o gifsicle.tar.gz "https://github.com/kohler/gifsicle/archive/refs/tags/v${GIF}.tar.gz"; \
+    tar xvzf gifsicle.tar.gz; cd gifsicle-${GIF}/ && autoreconf -i && ./configure && make && make install
+
+RUN curl -fL -o jpegsrc.tar.gz "https://www.ijg.org/files/jpegsrc.v${JPG}.tar.gz"; \
+    tar xvzf jpegsrc.tar.gz; cd jpeg-${JPG}/ && ./configure && make && make install
+
+RUN curl -fL -o optipng.tar.gz "https://sourceforge.net/projects/optipng/files/OptiPNG/optipng-${PNG}/optipng-${PNG}.tar.gz"; \
+    tar xvzf optipng.tar.gz; ls -l; cd optipng-${PNG}/ && ./configure && make && make install
+
+RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP}.tar.gz"; \
+    tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
+
+RUN apk del .build-deps libtool $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
