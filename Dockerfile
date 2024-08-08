@@ -53,7 +53,7 @@ RUN curl -fL -o optipng.tar.gz "https://sourceforge.net/projects/optipng/files/O
 RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP}.tar.gz"; \
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
-RUN apk del .build-deps libtool $PHPIZE_DEPS
+RUN apk del .build-deps libtool automake $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
