@@ -11,6 +11,8 @@ RUN apk add --update bash  \
     imagemagick-dev \
     libjpeg-turbo \
     libgomp \
+    libtool \
+    automake \
     freetype-dev \
     icu-dev  \
     htop  \
@@ -39,8 +41,8 @@ ARG JPG='9f'
 ARG PNG=0.7.8
 ARG WEBP=1.4.0
 
-RUN curl -fL -o gifsicle.tar.gz "https://www.lcdf.org/gifsicle/gifsicle-${GIF}.tar.gz"; \
-    tar xvzf gifsicle.tar.gz; cd gifsicle-${GIF}/ && ./configure && make && make install
+RUN curl -fL -o gifsicle.tar.gz "https://github.com/kohler/gifsicle/archive/refs/tags/v${GIF}.tar.gz"; \
+    tar xvzf gifsicle.tar.gz; cd gifsicle-${GIF}/ && autoreconf -i && ./configure && make && make install
 
 RUN curl -fL -o jpegsrc.tar.gz "https://www.ijg.org/files/jpegsrc.v${JPG}.tar.gz"; \
     tar xvzf jpegsrc.tar.gz; cd jpeg-${JPG}/ && ./configure && make && make install
@@ -51,7 +53,7 @@ RUN curl -fL -o optipng.tar.gz "https://sourceforge.net/projects/optipng/files/O
 RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP}.tar.gz"; \
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
-RUN apk del .build-deps $PHPIZE_DEPS
+RUN apk del .build-deps libtool $PHPIZE_DEPS
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
