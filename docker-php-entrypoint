@@ -6,8 +6,8 @@ set -e
 
 # Start modification
 # Check for an `init.d` folder and execute the containg scripts.
-if [ -d /usr/local/bin/init.d ]; then
-	for f in /usr/local/bin/init.d/*.sh; do
+if [ -d /usr/local/bin/docker-entrypoint.d ]; then
+	for f in /usr/local/bin/docker-entrypoint.d/*.sh; do
 		ash "$f"
 	done
 fi
