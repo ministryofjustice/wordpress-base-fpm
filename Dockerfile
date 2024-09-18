@@ -81,3 +81,6 @@ RUN apk add dpkg tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN printf '[Date]\ndate.timezone="%s"\n' $TZ > /usr/local/etc/php/conf.d/tzone.ini    
+
+# Copy the modified entrypoint, to allow init. scripts.
+COPY docker-php-entrypoint /usr/local/bin/
