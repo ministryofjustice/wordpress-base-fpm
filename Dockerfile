@@ -84,3 +84,5 @@ RUN printf '[Date]\ndate.timezone="%s"\n' $TZ > /usr/local/etc/php/conf.d/tzone.
 
 # Copy the modified entrypoint, to allow init. scripts.
 COPY docker-php-entrypoint /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-php-entrypoint
