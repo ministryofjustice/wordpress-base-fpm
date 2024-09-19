@@ -39,7 +39,7 @@ jobs:
           args: --file=Dockerfile --severity-threshold=medium
 
   build:
-    if: github.base_ref == 'main'
+    if: github.head_ref == 'main'
     needs: snyk
     runs-on: ubuntu-latest
     steps:
