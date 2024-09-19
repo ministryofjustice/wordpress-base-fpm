@@ -41,7 +41,7 @@ jobs:
 
   build:
     if: github.head_ref == 'main'
-    name: "Build & Push: multi-arch docker images"
+    name: "Build: multi-arch docker"
     needs: snyk
     runs-on: ubuntu-latest
     steps:
