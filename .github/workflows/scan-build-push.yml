@@ -21,7 +21,6 @@ permissions:
 
 jobs:
   snyk:
-    if: github.head_ref == 'main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
