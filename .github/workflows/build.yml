@@ -40,7 +40,7 @@ jobs:
           args: --file=Dockerfile --severity-threshold=medium
 
   build:
-    if: github.head_ref == 'main'
+    if: ${{ github.event.pull_request.merged }}
     name: "Build: multi-arch docker"
     needs: snyk
     runs-on: ubuntu-latest
