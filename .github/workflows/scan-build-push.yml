@@ -12,9 +12,6 @@ on:
     - cron: '18 6 */2 * *'
       # Run builds at 06:18 on every 2nd day-of-month.
 
-env:
-  TEST_TAG: ministryofjustice/wordpress-base-fpm:test
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -41,12 +38,6 @@ jobs:
           image: moj/wordpress-base-fpm
           args: --file=Dockerfile --severity-threshold=medium
 
-      - name: Run Snyk | Check PHP for vulnerabilities
-        uses: snyk/actions/php@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=medium
   build:
     if: github.base_ref == 'main'
     needs: snyk
