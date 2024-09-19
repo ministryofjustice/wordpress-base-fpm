@@ -31,16 +31,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build a Docker image
-        run: docker build -t justice/wordpress-base-fpm .
+        run: docker build -t moj/wordpress-base-fpm .
 
-      - name: Run Snyk to check Docker image for vulnerabilities
-        uses: snyk/actions/docker@14818c4695ecc4045f33c9cee9e795a788711ca4
+      - name: Run Snyk | Check Docker image for vulnerabilities
+        uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: justice/wordpress-base-fpm
+          image: moj/wordpress-base-fpm
           args: --file=Dockerfile --severity-threshold=medium
+
+      - name: Run Snyk | Check PHP for vulnerabilities
+        uses: snyk/actions/php@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=medium
   build:
+    if: github.base_ref == 'main'
     needs: snyk
     runs-on: ubuntu-latest
     steps:
@@ -59,24 +67,13 @@ jobs:
 
       # Access Docker Hub
       - name: Login to Docker Hub
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Setup test build for PRs
-      - name: Test - build and export to Docker
-        if: github.event_name == 'pull_request'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          tags: ${{ env.TEST_TAG }}
-
       # Gather meta for the builds
       - name: Docker meta
-        if: github.event_name != 'pull_request'
         id: wordpress-base-meta
         uses: docker/metadata-action@v5
         with:
@@ -91,7 +88,6 @@ jobs:
 
       # perform the builds
       - name: Build and push
-        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v5
         with:
           context: .
