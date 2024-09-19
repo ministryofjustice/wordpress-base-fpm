@@ -1,6 +1,11 @@
 FROM php:8.3-fpm-alpine3.20
 
+# Remove CURL:
+# https://hub.docker.com/layers/ministryofjustice/wordpress-base-fpm/main/images/sha256-c9b578a559b7c1a217ccb5feeec3825f757a12a170083ad056b8039f22a8372c?context=repo&tab=vulnerabilities
+RUN apk del curl
+
 RUN apk add --update bash  \
+    curl \
     zlib-dev  \
     libpng-dev  \
     libzip-dev  \
