@@ -1,4 +1,4 @@
-name: "Scan, Build and Push to Docker Hub"
+name: "Builder"
 
 # Controls when the workflow will run
 on:
@@ -41,7 +41,7 @@ jobs:
 
   build:
     if: github.head_ref == 'main'
-    name: "Build: multi-arch docker"
+    name: "Push: multi-arch docker"
     needs: snyk
     runs-on: ubuntu-latest
     steps:
