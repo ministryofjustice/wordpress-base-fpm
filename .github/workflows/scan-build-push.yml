@@ -21,6 +21,7 @@ permissions:
 
 jobs:
   snyk:
+    name: "Snyk: scanner"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,6 +41,7 @@ jobs:
 
   build:
     if: github.head_ref == 'main'
+    name: "Build: multi-arch docker"
     needs: snyk
     runs-on: ubuntu-latest
     steps:
