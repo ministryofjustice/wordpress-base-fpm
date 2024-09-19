@@ -2,6 +2,8 @@
 
 # <img alt="MoJ logo" src="https://moj-logos.s3.eu-west-2.amazonaws.com/moj-uk-logo.png" width="200"><br>WordPress Base<br>PHP-FPM
 
+[![Builder](https://github.com/ministryofjustice/wordpress-base-fpm/actions/workflows/build.yml/badge.svg)](https://github.com/ministryofjustice/wordpress-base-fpm/actions/workflows/build.yml)
+<br>
 [![Standards Icon]][Standards Link]
 [![License Icon]][License Link]
 
