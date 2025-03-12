@@ -30,6 +30,9 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
 
+# Use /tmp while downloading and compiling
+WORKDIR /tmp
+
 # Use the mlocati/php-extension-installer to install the relay PHP extension
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions relay && \
@@ -66,6 +69,12 @@ RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmpro
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
 RUN apk del .build-deps libtool automake $PHPIZE_DEPS
+
+# Delete all contents of /tmp
+RUN rm -rf /tmp/*
+
+# Return to default directory
+WORKDIR /var/www/html
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
