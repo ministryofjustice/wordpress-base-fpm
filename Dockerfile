@@ -30,8 +30,8 @@ RUN apk add --no-cache --virtual .build-deps pcre-dev $PHPIZE_DEPS
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
 
-RUN pecl install redis \
-    && docker-php-ext-enable redis.so
+RUN pecl install redis igbinary \
+    && docker-php-ext-enable redis.so igbinary
 
 # Download, patch and install imagick
 # https://github.com/docker-library/wordpress/blob/0c3488c5a6623a4858964ba69950260018201d79/latest/php8.3/fpm/Dockerfile#L47
