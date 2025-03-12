@@ -22,7 +22,8 @@ RUN apk add --update bash  \
     freetype-dev \
     icu-dev  \
     htop  \
-    mariadb-client
+    mariadb-client \
+    fcgi
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS
 
@@ -31,6 +32,11 @@ RUN docker-php-ext-configure intl && \
 
 # Use /tmp while downloading and compiling
 WORKDIR /tmp
+
+# Use the mlocati/php-extension-installer to install the relay PHP extension
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions relay && \
+    rm /usr/local/bin/install-php-extensions
 
 # Download, patch and install imagick
 # https://github.com/docker-library/wordpress/blob/0c3488c5a6623a4858964ba69950260018201d79/latest/php8.3/fpm/Dockerfile#L47
@@ -95,7 +101,10 @@ ENV TZ=Europe/London
 RUN apk add dpkg tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN printf '[Date]\ndate.timezone="%s"\n' $TZ > /usr/local/etc/php/conf.d/tzone.ini    
+RUN printf '[Date]\ndate.timezone="%s"\n' $TZ > /usr/local/etc/php/conf.d/tzone.ini
+
+# Create a healthcheck folder, in preperation for the healthcheck script(s).
+RUN mkdir -p /usr/local/bin/fpm-health
 
 # Copy the modified entrypoint, to allow init. scripts.
 COPY docker-php-entrypoint /usr/local/bin/
