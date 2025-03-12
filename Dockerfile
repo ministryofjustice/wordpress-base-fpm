@@ -30,11 +30,6 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
 
-# Use the mlocati/php-extension-installer to install the relay PHP extension
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN install-php-extensions relay && \
-    rm /usr/local/bin/install-php-extensions
-
 # Download, patch and install imagick
 # https://github.com/docker-library/wordpress/blob/0c3488c5a6623a4858964ba69950260018201d79/latest/php8.3/fpm/Dockerfile#L47
 RUN curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.7.0.tgz'; \
