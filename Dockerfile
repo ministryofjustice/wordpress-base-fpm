@@ -108,3 +108,6 @@ RUN mkdir -p /usr/local/bin/fpm-health
 COPY docker-php-entrypoint /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/docker-php-entrypoint
+
+# Set user to nobody - a user with minimal permissions
+USER 65534
