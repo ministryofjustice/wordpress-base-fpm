@@ -33,6 +33,9 @@ RUN docker-php-ext-configure intl && \
 RUN pecl install redis igbinary \
     && docker-php-ext-enable redis.so igbinary
 
+# Use /tmp while downloading and compiling
+WORKDIR /tmp
+
 # Download, patch and install imagick
 # https://github.com/docker-library/wordpress/blob/0c3488c5a6623a4858964ba69950260018201d79/latest/php8.3/fpm/Dockerfile#L47
 RUN curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.7.0.tgz'; \
@@ -64,6 +67,12 @@ RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmpro
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
 RUN apk del .build-deps libtool automake $PHPIZE_DEPS
+
+# Delete all contents of /tmp
+RUN rm -rf /tmp/*
+
+# Return to default directory
+WORKDIR /var/www/html
 
 RUN echo "opcache.jit_buffer_size=500000000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
