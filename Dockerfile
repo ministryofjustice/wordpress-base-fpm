@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.21
+FROM php:8.3-fpm-alpine3.22
 
 # Remove CURL:
 # https://hub.docker.com/layers/ministryofjustice/wordpress-base-fpm/main/images/sha256-c9b578a559b7c1a217ccb5feeec3825f757a12a170083ad056b8039f22a8372c?context=repo&tab=vulnerabilities
@@ -23,7 +23,9 @@ RUN apk add --update bash  \
     icu-dev  \
     htop  \
     mariadb-client \
-    fcgi
+    fcgi \
+    perl \
+    tar
 
 RUN apk add --no-cache --virtual .build-deps pcre-dev $PHPIZE_DEPS
 
