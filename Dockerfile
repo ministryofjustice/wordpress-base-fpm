@@ -17,8 +17,6 @@ RUN apk add --update bash  \
     imagemagick-dev \
     libjpeg-turbo \
     libgomp \
-    libtool \
-    automake \
     freetype-dev \
     icu-dev  \
     htop  \
@@ -27,7 +25,11 @@ RUN apk add --update bash  \
     perl \
     tar
 
-RUN apk add --no-cache --virtual .build-deps pcre-dev $PHPIZE_DEPS
+RUN apk add --no-cache --virtual .build-deps \
+    libtool \
+    automake \
+    pcre-dev \
+    $PHPIZE_DEPS
 
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
@@ -68,7 +70,7 @@ RUN curl -fL -o optipng.tar.gz "https://sourceforge.net/projects/optipng/files/O
 RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP}.tar.gz"; \
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
-RUN apk del .build-deps libtool automake $PHPIZE_DEPS
+RUN apk del .build-deps $PHPIZE_DEPS
 
 # Delete all contents of /tmp
 RUN rm -rf /tmp/*
