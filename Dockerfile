@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.21
+FROM php:8.3-fpm-alpine3.22
 
 # Remove CURL:
 # https://hub.docker.com/layers/ministryofjustice/wordpress-base-fpm/main/images/sha256-c9b578a559b7c1a217ccb5feeec3825f757a12a170083ad056b8039f22a8372c?context=repo&tab=vulnerabilities
@@ -17,15 +17,19 @@ RUN apk add --update bash  \
     imagemagick-dev \
     libjpeg-turbo \
     libgomp \
-    libtool \
-    automake \
     freetype-dev \
     icu-dev  \
     htop  \
     mariadb-client \
-    fcgi
+    fcgi \
+    perl \
+    tar
 
-RUN apk add --no-cache --virtual .build-deps pcre-dev $PHPIZE_DEPS
+RUN apk add --no-cache --virtual .build-deps \
+    libtool \
+    automake \
+    pcre-dev \
+    $PHPIZE_DEPS
 
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install -j "$(nproc)" exif gd zip mysqli opcache intl
@@ -66,7 +70,7 @@ RUN curl -fL -o optipng.tar.gz "https://sourceforge.net/projects/optipng/files/O
 RUN curl -fL -o libwebp.tar.gz "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP}.tar.gz"; \
     tar xvzf libwebp.tar.gz; ls -l; cd libwebp-${WEBP}/ && ./configure && make && make install
 
-RUN apk del .build-deps libtool automake $PHPIZE_DEPS
+RUN apk del .build-deps $PHPIZE_DEPS
 
 # Delete all contents of /tmp
 RUN rm -rf /tmp/*
