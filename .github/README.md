@@ -1,3 +1,9 @@
+> [!IMPORTANT]  
+> This repository has been archived. 
+> It was originally created for the Justice UK website and MoJ Intranet, the services were transferred to the Website Builder team in 2026.
+> 
+> Justice UK was replatformed to the Website Builder Platform and for consistency the MoJ Intranet was swapped to use the Official WordPress image.
+
 <div align="center">
 
 # <img alt="MoJ logo" src="https://moj-logos.s3.eu-west-2.amazonaws.com/moj-uk-logo.png" width="200"><br>WordPress Base<br>PHP-FPM
