@@ -2,7 +2,7 @@
 > This repository has been archived. 
 > It was originally created for the Justice UK website and MoJ Intranet, the services were transferred to the Website Builder team in 2026.
 > 
-> Justice UK was replatformed to the Website Builder Platform and for consistency the MoJ Intranet was swapped to use the Official WordPress image.
+> Justice UK has been replatformed to the Website Builder Platform. For consistency, the MoJ Intranet now uses the official WordPress image.
 
 <div align="center">
 
